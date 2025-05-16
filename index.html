@@ -1,164 +1,98 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Happy Anniversary</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background: #fff0f5;
-      color: #333;
-      text-align: center;
-    }
-
-    header {
-      background: #ff69b4;
-      color: white;
-      padding: 2rem 1rem;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-      animation: slideDown 1s ease-out;
-    }
-
-    header h1 {
-      margin: 0;
-      font-size: 2.5rem;
-    }
-
-    .slideshow-container {
-      position: relative;
-      max-width: 600px;
-      margin: 2rem auto;
-      border-radius: 10px;
-      overflow: hidden;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    }
-
-    .slide {
-      display: none;
-      width: 100%;
-      height: auto;
-      animation: fade 1s ease-in-out;
-    }
-
-    .slide.active {
-      display: block;
-    }
-
-    .nav-btn {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      background: rgba(0, 0, 0, 0.4);
-      color: white;
-      border: none;
-      font-size: 1.5rem;
-      padding: 10px 15px;
-      cursor: pointer;
-      user-select: none;
-      border-radius: 5px;
-    }
-
-    .prev {
-      left: 10px;
-    }
-
-    .next {
-      right: 10px;
-    }
-
-    .message {
-      max-width: 800px;
-      margin: auto;
-      padding: 1rem 2rem;
-      font-size: 1.2rem;
-      line-height: 1.6;
-      animation: fadeInUp 2s ease;
-    }
-
-    .footer {
-      margin-top: 2rem;
-      padding: 1rem;
-      color: #777;
-    }
-
-    @keyframes slideDown {
-      from { transform: translateY(-100%); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
-    }
-
-    @keyframes fade {
-      from { opacity: 0.4; }
-      to { opacity: 1; }
-    }
-
-    @keyframes fadeInUp {
-      from { transform: translateY(30px); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
-    }
-
-    @media (max-width: 600px) {
-      header h1 { font-size: 1.8rem; }
-      .message { font-size: 1rem; }
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Anniversary Slideshow</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #fff0f5;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    color: #900;
+  }
+  h1 {
+    margin-bottom: 20px;
+    font-size: 2.5rem;
+    text-align: center;
+  }
+  .slideshow-container {
+    position: relative;
+    max-width: 600px;
+    width: 100%;
+    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    border-radius: 10px;
+    overflow: hidden;
+    background: white;
+  }
+  .slide {
+    display: none;
+    width: 100%;
+  }
+  .slide.active {
+    display: block;
+  }
+  .prev, .next {
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    width: auto;
+    padding: 10px;
+    margin-top: -22px;
+    color: #900;
+    font-weight: bold;
+    font-size: 24px;
+    border-radius: 0 3px 3px 0;
+    user-select: none;
+    background-color: rgba(255,255,255,0.8);
+  }
+  .next {
+    right: 0;
+    border-radius: 3px 0 0 3px;
+  }
+  .prev:hover, .next:hover {
+    background-color: rgba(255,0,0,0.8);
+    color: white;
+  }
+</style>
 </head>
 <body>
 
-  <header>
-    <h1>Happy Anniversary, Jane & John!</h1>
-  </header>
+<h1>Happy Anniversary! Here's to many more memories together.</h1>
 
-  <div class="slideshow-container">
-    <img src="photo1.jpg" class="slide active" alt="Memory 1">
-    <img src="photo2.jpg" class="slide" alt="Memory 2">
-    <img src="photo3.jpg" class="slide" alt="Memory 3">
+<div class="slideshow-container">
+  <img src="images/Image_fx (21).jpg.png" class="slide active" alt="Memory 1" />
+  <img src="images/Image_fx (26).jpg.png" class="slide" alt="Memory 2" />
+  <img src="images/Image_fx (28).jpg.png" class="slide" alt="Memory 3" />
 
-    <button class="nav-btn prev" onclick="prevSlide()">&#10094;</button>
-    <button class="nav-btn next" onclick="nextSlide()">&#10095;</button>
-  </div>
+  <a class="prev" onclick="changeSlide(-1)">&#10094;</a>
+  <a class="next" onclick="changeSlide(1)">&#10095;</a>
+</div>
 
-  <div class="message">
-    <p>Every photo is a memory. Every moment is a milestone. Today, we celebrate them all.</p>
-    <p>From laughter to lessons, from sweet to silly, your journey together shines bright.</p>
-    <p><strong>Happy anniversary!</strong></p>
-  </div>
+<script>
+  let currentSlide = 0;
+  const slides = document.querySelectorAll('.slide');
 
-  <div class="footer">
-    &copy; 2025 Made with love
-  </div>
+  function showSlide(index) {
+    if (index >= slides.length) currentSlide = 0;
+    else if (index < 0) currentSlide = slides.length - 1;
+    else currentSlide = index;
 
-  <script>
-    let slides = document.querySelectorAll('.slide');
-    let current = 0;
-    let interval = setInterval(nextSlide, 3000);
-
-    function showSlide(index) {
-      slides.forEach((slide, i) => {
-        slide.classList.remove('active');
-        if (i === index) slide.classList.add('active');
-      });
-    }
-
-    function nextSlide() {
-      current = (current + 1) % slides.length;
-      showSlide(current);
-    }
-
-    function prevSlide() {
-      current = (current - 1 + slides.length) % slides.length;
-      showSlide(current);
-    }
-
-    // Pause auto-play on manual navigation
-    document.querySelectorAll('.nav-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        clearInterval(interval);
-        interval = setInterval(nextSlide, 3000);
-      });
+    slides.forEach((slide, i) => {
+      slide.classList.toggle('active', i === currentSlide);
     });
-  </script>
+  }
+
+  function changeSlide(direction) {
+    showSlide(currentSlide + direction);
+  }
+</script>
 
 </body>
 </html>
