@@ -27,19 +27,57 @@
     p {
       margin: 5px;
     }
+
+    .controls {
+      display: grid;
+      grid-template-columns: repeat(3, 60px);
+      gap: 10px;
+      justify-content: center;
+      margin: 20px auto;
+    }
+
+    .control-button {
+      padding: 15px;
+      background: #333;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 18px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .control-button:active {
+      background: #555;
+    }
+
+    .center-btn {
+      grid-column: 2 / 3;
+    }
   </style>
 </head>
 <body>
   <h1>🎮 Tetris</h1>
   <canvas id="tetris" width="240" height="400"></canvas>
-  <p>Use arrow keys to move. Up to rotate.</p>
+  <p>Use arrow keys or buttons below.</p>
   <p id="score">Score: 0</p>
+
+  <!-- On-screen Controls -->
+  <div class="controls">
+    <button class="control-button" onclick="handleControl('left')">⬅️</button>
+    <button class="control-button center-btn" onclick="handleControl('down')">⬇️</button>
+    <button class="control-button" onclick="handleControl('right')">➡️</button>
+    <button class="control-button" disabled></button>
+    <button class="control-button center-btn" onclick="handleControl('rotate')">🔄</button>
+    <button class="control-button" disabled></button>
+  </div>
 
   <script>
     const canvas = document.getElementById('tetris');
     const context = canvas.getContext('2d');
-    context.scale(20, 20); // Scale for Tetris block size
+    context.scale(20, 20);
 
+    // Tetris logic same as before...
     function createMatrix(w, h) {
       const matrix = [];
       while (h--) {
@@ -255,6 +293,7 @@
       score: 0,
     };
 
+    // Keyboard controls
     document.addEventListener('keydown', event => {
       if (event.key === 'ArrowLeft') {
         playerMove(-1);
@@ -266,6 +305,24 @@
         playerRotate(1);
       }
     });
+
+    // Virtual button handler
+    function handleControl(action) {
+      switch (action) {
+        case 'left':
+          playerMove(-1);
+          break;
+        case 'right':
+          playerMove(1);
+          break;
+        case 'down':
+          playerDrop();
+          break;
+        case 'rotate':
+          playerRotate(1);
+          break;
+      }
+    }
 
     playerReset();
     updateScore();
