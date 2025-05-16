@@ -1,98 +1,235 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Anniversary Slideshow</title>
-<style>
-  body {
-    font-family: Arial, sans-serif;
-    background: #fff0f5;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    color: #900;
-  }
-  h1 {
-    margin-bottom: 20px;
-    font-size: 2.5rem;
-    text-align: center;
-  }
-  .slideshow-container {
-    position: relative;
-    max-width: 600px;
-    width: 100%;
-    box-shadow: 0 0 15px rgba(0,0,0,0.2);
-    border-radius: 10px;
-    overflow: hidden;
-    background: white;
-  }
-  .slide {
-    display: none;
-    width: 100%;
-  }
-  .slide.active {
-    display: block;
-  }
-  .prev, .next {
-    cursor: pointer;
-    position: absolute;
-    top: 50%;
-    width: auto;
-    padding: 10px;
-    margin-top: -22px;
-    color: #900;
-    font-weight: bold;
-    font-size: 24px;
-    border-radius: 0 3px 3px 0;
-    user-select: none;
-    background-color: rgba(255,255,255,0.8);
-  }
-  .next {
-    right: 0;
-    border-radius: 3px 0 0 3px;
-  }
-  .prev:hover, .next:hover {
-    background-color: rgba(255,0,0,0.8);
-    color: white;
-  }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Anniversary Slideshow</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #fff0f5;
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      color: #900;
+    }
+
+    h1 {
+      margin-top: 20px;
+      font-size: 2rem;
+      text-align: center;
+    }
+
+    .book-container {
+      perspective: 1500px;
+      width: 600px;
+      height: 400px;
+      position: relative;
+      margin: 20px auto;
+    }
+
+    .book {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 1s ease;
+    }
+
+    .page {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      backface-visibility: hidden;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: inset -20px 0 30px -15px rgba(0,0,0,0.3);
+      transition: transform 1s ease, box-shadow 1s ease;
+    }
+
+    .page.front {
+      background: white;
+      z-index: 2;
+    }
+
+    .page.back {
+      background: white;
+      transform: rotateY(180deg);
+      z-index: 1;
+    }
+
+    .page img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .book.flipped .page.front {
+      box-shadow: inset 20px 0 30px -15px rgba(0,0,0,0.3);
+    }
+
+    .buttons {
+      margin-top: 15px;
+      width: 600px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    button {
+      background: #900;
+      border: none;
+      color: white;
+      padding: 10px 20px;
+      font-size: 1.2rem;
+      border-radius: 5px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    button:hover {
+      background: #b00;
+    }
+
+    /* Floating hearts */
+    .heart {
+      position: fixed;
+      bottom: -50px;
+      width: 30px;
+      height: 30px;
+      background: red;
+      transform: rotate(-45deg);
+      animation: floatUp 5s linear infinite;
+      opacity: 0.8;
+      z-index: 999;
+    }
+
+    .heart::before,
+    .heart::after {
+      content: "";
+      position: absolute;
+      width: 30px;
+      height: 30px;
+      background: red;
+      border-radius: 50%;
+    }
+
+    .heart::before {
+      top: -15px;
+      left: 0;
+    }
+
+    .heart::after {
+      left: 15px;
+      top: 0;
+    }
+
+    @keyframes floatUp {
+      0% {
+        transform: translateY(0) rotate(-45deg);
+        opacity: 0.8;
+      }
+      100% {
+        transform: translateY(-600px) rotate(-45deg);
+        opacity: 0;
+      }
+    }
+  </style>
 </head>
 <body>
 
-<h1>Happy Anniversary! Here's to many more memories together.</h1>
+  <h1>Happy Anniversary! Here's to many more memories together.</h1>
 
-<div class="slideshow-container">
-  <img src="images/Image_fx (21).jpg.png" class="slide active" alt="Memory 1" />
-  <img src="images/Image_fx (26).jpg.png" class="slide" alt="Memory 2" />
-  <img src="images/Image_fx (28).jpg.png" class="slide" alt="Memory 3" />
+  <div class="book-container">
+    <div class="book" id="book">
+      <div class="page front">
+        <img src="images/Image_fx (21).jpg.png" alt="Memory 1" />
+      </div>
+      <div class="page back">
+        <img src="images/Image_fx (26).jpg.png" alt="Memory 2" />
+      </div>
+    </div>
+  </div>
 
-  <a class="prev" onclick="changeSlide(-1)">&#10094;</a>
-  <a class="next" onclick="changeSlide(1)">&#10095;</a>
-</div>
+  <div class="buttons">
+    <button id="prevBtn">Previous</button>
+    <button id="nextBtn">Next</button>
+  </div>
 
-<script>
-  let currentSlide = 0;
-  const slides = document.querySelectorAll('.slide');
+  <script>
+    const book = document.getElementById('book');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
 
-  function showSlide(index) {
-    if (index >= slides.length) currentSlide = 0;
-    else if (index < 0) currentSlide = slides.length - 1;
-    else currentSlide = index;
+    const pages = [
+      "images/Image_fx (21).jpg.png",
+      "images/Image_fx (26).jpg.png",
+      "images/Image_fx (28).jpg.png"
+    ];
 
-    slides.forEach((slide, i) => {
-      slide.classList.toggle('active', i === currentSlide);
-    });
-  }
+    let currentPage = 0;
 
-  function changeSlide(direction) {
-    showSlide(currentSlide + direction);
-  }
-</script>
+    function updatePages() {
+      const front = book.querySelector('.front img');
+      const back = book.querySelector('.back img');
+
+      front.src = pages[currentPage];
+      back.src = pages[(currentPage + 1) % pages.length];
+    }
+
+    function flipNext() {
+      if(currentPage < pages.length - 2) {
+        book.classList.add('flipped');
+        setTimeout(() => {
+          currentPage++;
+          updatePages();
+          book.classList.remove('flipped');
+        }, 1000);
+      }
+    }
+
+    function flipPrev() {
+      if(currentPage > 0) {
+        book.classList.add('flipped');
+        setTimeout(() => {
+          currentPage--;
+          updatePages();
+          book.classList.remove('flipped');
+        }, 1000);
+      }
+    }
+
+    nextBtn.addEventListener('click', flipNext);
+    prevBtn.addEventListener('click', flipPrev);
+
+    updatePages();
+
+    // Floating heart script
+    function createHeart() {
+      const heart = document.createElement('div');
+      heart.classList.add('heart');
+      heart.style.left = Math.random() * 80 + 10 + 'vw';
+      const duration = Math.random() * 3 + 4;
+      heart.style.animationDuration = duration + 's';
+
+      heart.addEventListener('click', () => {
+        heart.remove();
+      });
+
+      document.body.appendChild(heart);
+
+      setTimeout(() => {
+        if (heart.parentElement) heart.remove();
+      }, duration * 1000);
+    }
+
+    setInterval(createHeart, 500);
+  </script>
 
 </body>
 </html>
