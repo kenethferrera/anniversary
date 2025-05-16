@@ -14,19 +14,48 @@
       justify-content: center;
       height: 100vh;
       margin: 0;
+      user-select: none;
+      -webkit-user-select: none;
     }
     canvas {
       border: 2px solid #fff;
       background: #000;
+      touch-action: none;
     }
     h1 {
       margin-bottom: 10px;
+    }
+    .controls {
+      margin-top: 10px;
+      display: flex;
+      gap: 10px;
+    }
+    button {
+      padding: 10px 15px;
+      font-size: 16px;
+      cursor: pointer;
+      background: #222;
+      border: 1px solid #fff;
+      color: white;
+      border-radius: 5px;
+      user-select: none;
+    }
+    button:active {
+      background: #555;
     }
   </style>
 </head>
 <body>
   <h1>TETRIS</h1>
   <canvas id="tetris" width="240" height="400"></canvas>
+
+  <div class="controls">
+    <button onclick="playerMove(-1)">Left</button>
+    <button onclick="playerRotate(1)">Rotate</button>
+    <button onclick="playerMove(1)">Right</button>
+    <button onclick="playerDrop()">Drop</button>
+  </div>
+
   <script>
     const canvas = document.getElementById('tetris');
     const context = canvas.getContext('2d');
@@ -202,22 +231,50 @@
       }
     }
 
-    let dropCounter = 0;
-    let dropInterval = 1000;
+    // Touch controls
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let touchEndX = 0;
+    let touchEndY = 0;
 
-    let lastTime = 0;
+    const swipeThreshold = 30; // Minimum px distance for swipe
 
-    function update(time = 0) {
-      const deltaTime = time - lastTime;
-      lastTime = time;
-      dropCounter += deltaTime;
-      if (dropCounter > dropInterval) {
-        playerDrop();
+    canvas.addEventListener('touchstart', (e) => {
+      const touch = e.changedTouches[0];
+      touchStartX = touch.screenX;
+      touchStartY = touch.screenY;
+    });
+
+    canvas.addEventListener('touchend', (e) => {
+      const touch = e.changedTouches[0];
+      touchEndX = touch.screenX;
+      touchEndY = touch.screenY;
+
+      const dx = touchEndX - touchStartX;
+      const dy = touchEndY - touchStartY;
+
+      if (Math.abs(dx) > Math.abs(dy)) {
+        // Horizontal swipe
+        if (Math.abs(dx) > swipeThreshold) {
+          if (dx > 0) {
+            playerMove(1);  // Swipe right = move right
+          } else {
+            playerMove(-1); // Swipe left = move left
+          }
+        }
+      } else {
+        // Vertical swipe
+        if (Math.abs(dy) > swipeThreshold) {
+          if (dy > 0) {
+            playerDrop();   // Swipe down = drop
+          } else {
+            playerRotate(1); // Swipe up = rotate
+          }
+        }
       }
-      draw();
-      requestAnimationFrame(update);
-    }
+    });
 
+    // Keyboard controls for desktop
     document.addEventListener('keydown', event => {
       if (event.keyCode === 37) {
         playerMove(-1);
@@ -250,6 +307,21 @@
       matrix: null,
       score: 0
     };
+
+    let dropCounter = 0;
+    let dropInterval = 1000;
+    let lastTime = 0;
+
+    function update(time = 0) {
+      const deltaTime = time - lastTime;
+      lastTime = time;
+      dropCounter += deltaTime;
+      if (dropCounter > dropInterval) {
+        playerDrop();
+      }
+      draw();
+      requestAnimationFrame(update);
+    }
 
     playerReset();
     update();
