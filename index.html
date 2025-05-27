@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Chess Payout Calculator</title>
+<title>Chess Payout Calculator with Draw Refund</title>
 <style>
   body { font-family: Arial, sans-serif; max-width: 500px; margin: 30px auto; padding: 20px; background: #f9f9f9; }
   label, select, input, button { display: block; margin: 10px 0; width: 100%; max-width: 300px; }
@@ -14,7 +14,7 @@
 </head>
 <body>
 
-<h2>Chess Match Outcome & Payout Calculator</h2>
+<h2>Chess Match Outcome & Payout Calculator (with Draw Refund)</h2>
 
 <label for="tier">Select Tier:</label>
 <select id="tier">
@@ -50,22 +50,26 @@
 
     const tier = tiers[tierName];
 
-    const expectedWins = (games * tier.win_prob).toFixed(2);
-    const expectedDraws = (games * tier.draw_prob).toFixed(2);
-    const expectedLosses = (games * tier.loss_prob).toFixed(2);
-    const expectedPayout = (expectedWins * tier.payout).toFixed(2);
-    const totalCost = (games * tier.cost_per_game).toFixed(2);
-    const netProfit = (expectedPayout - totalCost).toFixed(2);
+    const expectedWins = (games * tier.win_prob);
+    const expectedDraws = (games * tier.draw_prob);
+    const expectedLosses = (games * tier.loss_prob);
+    
+    // Calculate payout: wins * payout + draws * refund
+    const drawRefund = 0.20;  // refund per draw game
+    const expectedPayout = (expectedWins * tier.payout) + (expectedDraws * drawRefund);
+    
+    const totalCost = games * tier.cost_per_game;
+    const netProfit = expectedPayout - totalCost;
 
     const resultsDiv = document.getElementById("results");
     resultsDiv.innerHTML = `
       <h3>Results for ${tierName} with ${games} games</h3>
-      <p><strong>Expected Wins:</strong> ${expectedWins}</p>
-      <p><strong>Expected Draws:</strong> ${expectedDraws}</p>
-      <p><strong>Expected Losses:</strong> ${expectedLosses}</p>
-      <p><strong>Expected Payout:</strong> $${expectedPayout}</p>
-      <p><strong>Total Cost:</strong> $${totalCost}</p>
-      <p><strong>Net Profit:</strong> $${netProfit}</p>
+      <p><strong>Expected Wins:</strong> ${expectedWins.toFixed(2)}</p>
+      <p><strong>Expected Draws:</strong> ${expectedDraws.toFixed(2)}</p>
+      <p><strong>Expected Losses:</strong> ${expectedLosses.toFixed(2)}</p>
+      <p><strong>Expected Payout (wins + draws refund):</strong> $${expectedPayout.toFixed(2)}</p>
+      <p><strong>Total Cost:</strong> $${totalCost.toFixed(2)}</p>
+      <p><strong>Net Profit:</strong> $${netProfit.toFixed(2)}</p>
     `;
   }
 </script>
