@@ -1,78 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Chess Payout Calculator with Draw Refund</title>
-<style>
-  body { font-family: Arial, sans-serif; max-width: 500px; margin: 30px auto; padding: 20px; background: #f9f9f9; }
-  label, select, input, button { display: block; margin: 10px 0; width: 100%; max-width: 300px; }
-  button { padding: 10px; background: #007bff; color: white; border: none; cursor: pointer; }
-  button:hover { background: #0056b3; }
-  .results { margin-top: 20px; background: white; padding: 15px; border-radius: 5px; }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Birthday Greeting</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Animate.css CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+
 </head>
-<body>
+<body class="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-pink-100 to-pink-200">
 
-<h2>Chess Match Outcome & Payout Calculator (with Draw Refund)</h2>
+  <h1 class="text-4xl font-bold mb-6 animate__animated animate__fadeInDown text-pink-700">
+    Happy Birthday, Vanessa! 🎉
+  </h1>
 
-<label for="tier">Select Tier:</label>
-<select id="tier">
-  <option value="Fair Mode">Fair Mode (Win $10)</option>
-  <option value="Challenging">Challenging (Win $20)</option>
-  <option value="Risky">Risky (Win $30)</option>
-  <option value="Brutal">Brutal (Free, No Payout)</option>
-</select>
-
-<label for="games">Number of Games to Play:</label>
-<input type="number" id="games" min="1" value="20" />
-
-<button onclick="calculatePayout()">Calculate</button>
-
-<div class="results" id="results"></div>
-
-<script>
-  const tiers = {
-    "Fair Mode": {win_prob: 0.225, draw_prob: 0.475, loss_prob: 0.30, payout: 10, cost_per_game: 0.20},
-    "Challenging": {win_prob: 0.125, draw_prob: 0.40, loss_prob: 0.475, payout: 20, cost_per_game: 0.20},
-    "Risky": {win_prob: 0.075, draw_prob: 0.30, loss_prob: 0.625, payout: 30, cost_per_game: 0.20},
-    "Brutal": {win_prob: 0.05, draw_prob: 0.15, loss_prob: 0.80, payout: 0, cost_per_game: 0.00},
-  };
-
-  function calculatePayout() {
-    const tierName = document.getElementById("tier").value;
-    const games = parseInt(document.getElementById("games").value);
-
-    if (!games || games < 1) {
-      alert("Please enter a valid number of games.");
-      return;
-    }
-
-    const tier = tiers[tierName];
-
-    const expectedWins = (games * tier.win_prob);
-    const expectedDraws = (games * tier.draw_prob);
-    const expectedLosses = (games * tier.loss_prob);
-    
-    // Calculate payout: wins * payout + draws * refund
-    const drawRefund = 0.20;  // refund per draw game
-    const expectedPayout = (expectedWins * tier.payout) + (expectedDraws * drawRefund);
-    
-    const totalCost = games * tier.cost_per_game;
-    const netProfit = expectedPayout - totalCost;
-
-    const resultsDiv = document.getElementById("results");
-    resultsDiv.innerHTML = `
-      <h3>Results for ${tierName} with ${games} games</h3>
-      <p><strong>Expected Wins:</strong> ${expectedWins.toFixed(2)}</p>
-      <p><strong>Expected Draws:</strong> ${expectedDraws.toFixed(2)}</p>
-      <p><strong>Expected Losses:</strong> ${expectedLosses.toFixed(2)}</p>
-      <p><strong>Expected Payout (wins + draws refund):</strong> $${expectedPayout.toFixed(2)}</p>
-      <p><strong>Total Cost:</strong> $${totalCost.toFixed(2)}</p>
-      <p><strong>Net Profit:</strong> $${netProfit.toFixed(2)}</p>
-    `;
-  }
-</script>
+  <button class="animate__animated animate__heartBeat animate__delay-1s px-6 py-3 bg-pink-500 text-white rounded-lg shadow-lg hover:bg-pink-600 transition">
+    Click to See More
+  </button>
 
 </body>
 </html>
